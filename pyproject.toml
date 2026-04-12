@@ -1,0 +1,16 @@
+[project]
+name = "llm"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "chromadb>=1.5.7",
+    "fastapi>=0.135.3",
+    "langchain-community>=0.4.1",
+    "langchain-ollama>=1.1.0",
+    "langchain-text-splitters>=1.1.1",
+    "langgraph>=1.1.6",
+    "python-dotenv>=1.2.2",
+    "uvicorn>=0.44.0",
+]
