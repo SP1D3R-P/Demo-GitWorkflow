@@ -9,6 +9,8 @@ import os
 import uuid
 from ollama import embed
 
+from Agent import Agentutils
+
 class VDBObject : 
 
     def __init__(
@@ -48,13 +50,15 @@ class VDBObject :
             return self.Client.get_or_create_collection(
                 collection_name,
                 embedding_function=OllamaEmbeddingFunction(
-                    model_name=self.EmbeddingModel
+                    model_name=self.EmbeddingModel,
+                    url= Agentutils.OLLAMA_URL
                 )
             )
         return self.Client.get_collection(
             collection_name,
             embedding_function= OllamaEmbeddingFunction(
-                    model_name=self.EmbeddingModel
+                    model_name=self.EmbeddingModel,
+                    url=Agentutils.OLLAMA_URL
                 )
         ) # This Can Raise Value Error if not Present 
     

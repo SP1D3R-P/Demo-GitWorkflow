@@ -5,6 +5,6 @@ services:
       - "8000:8000"
     environment:
       # Tell your app to use the magic DNS name
-      - OLLAMA_URL=http://127.0.0.1:11434
-      - OLLAMA_HOST=http://127.0.0.1:11434
+      - OLLAMA_URL=http://host.docker.internal:11434
+      - OLLAMA_HOST=http://host.docker.internal:11434
     

@@ -1,7 +1,7 @@
 FROM python:3.11-slim-bookworm
 
 WORKDIR /app
-
+ENV OLLAMA_BASE_URL=http://host.docker.internal:11434/
 COPY pyproject.toml uv.lock ./
 RUN pip install uv
 RUN uv sync

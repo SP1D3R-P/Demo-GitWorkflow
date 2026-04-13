@@ -4,7 +4,8 @@ load_dotenv()
 
 
 from pathlib import Path
-import os
+import time
+import logging
 
 from Agent import Agentutils
 from langgraph.graph import StateGraph , END , START
@@ -54,10 +55,11 @@ compiled_workflow = define_workflow()
 
 @app.get("/lora")
 def pdf_search(request : str ):
-    print('OLLAMA URL is : '+os.getenv("OLLAMA_URL","http://127.0.0.1:11434"))
+    start = time.time()
     result = compiled_workflow.invoke(
         {
             'user_input'  : request
         }
     )
-    return result['solution']
+    logging.info(f"Time Taken to response :{time.time() - start}s")
+    return {'soltuion' : result['solution'] }

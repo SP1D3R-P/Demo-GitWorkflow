@@ -8,7 +8,7 @@ import textwrap
 
 from typing import TypedDict , Sequence , Annotated 
 
-OLLAMA_URL = os.getenv("OLLAMA_URL","http://127.0.0.1:11434")
+OLLAMA_URL = os.getenv("OLLAMA_BASE_URL",'http://localhost:11434')
 print(OLLAMA_URL)
 
 _MODEL_NAME : str = os.getenv('MODEL_NAME','qwen3.5:0.8b')

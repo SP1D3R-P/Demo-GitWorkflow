@@ -6,8 +6,9 @@ from typing import List , Optional
 
 from Agent import Agentutils
 
-from ollama import chat
+from ollama import chat , Client
 from langchain_core.prompts import PromptTemplate
+import logging
 
 
 class EditorInput(BaseModel) : 
@@ -41,6 +42,8 @@ editorFormat = PromptTemplate.from_template(
 """
 )
 
+client = Client(host=Agentutils.OLLAMA_URL)
+
 
 # @tool(name='Editor',args_schema=EditorInput) # Making it node so that it's easy to add conditional node
 def Editor(State : Agentutils.AgentState )  : 
@@ -57,28 +60,28 @@ def Editor(State : Agentutils.AgentState )  :
 
     """
     global editorFormat
-    while True :
-        try :
-            response = chat(
-                model='EditorModel',
-                messages=[
-                    {
-                        'role' : 'user',
-                        'content' : editorFormat.format(
-                            Notes = '\n\t-'.join(['']+State['research_notes']),
-                            Report = State['solution'],
-                            Query = State['query']
-                        )
-                    },
-                ],
-                format=EditorResult.model_json_schema(),
-                think=False,
-            )
-            parsed_response =  EditorResult.model_validate_json(response.message.content) # This is failing sometimes [ Donno, might due to dumb llm ?]
-            if parsed_response.isValid : 
-                return {'Msg':State['solution'],'is_sufficient' : True}  # TODO :: Latter let's work with Reason
-            
-            return {'is_sufficient' : False }
-        except :
-            continue
+    try :
+        logging.info("Starting Editor.")
+        response = client.chat(
+            model='EditorModel',
+            messages=[
+                {
+                    'role' : 'user',
+                    'content' : editorFormat.format(
+                        Notes = '\n\t-'.join(['']+State['research_notes']),
+                        Report = State['solution'],
+                        Query = State['query']
+                    )
+                },
+            ],
+            format=EditorResult.model_json_schema(),
+            think=False,
+        )
+        parsed_response =  EditorResult.model_validate_json(response.message.content) # This is failing sometimes [ Donno, might due to dumb llm ?]
+        if parsed_response.isValid : 
+            return {'Msg':State['solution'],'is_sufficient' : True}  # TODO :: Latter let's work with Reason
+        logging.info("Editor Result Failed. Retrying.")
+        return {'is_sufficient' : False }
+    except :
+        return {'is_sufficient' : False }
 
